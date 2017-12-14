@@ -47,7 +47,7 @@ const fetchSessionToken = function(callback) {
   });
 
 };
-fetchSessionToken();
+
 const fetchQuestions = function(category, amount, callback) {
   const url = new URL(BASE_URL);
   url.pathname = '/api.php';
@@ -55,7 +55,7 @@ const fetchQuestions = function(category, amount, callback) {
   url.searchParams.set('amount');
   url.searchParams.set('token');
 
-  $.getJSON(url, callback)
+  $.getJSON(url, callback);
 };
 
 // function getQuestions(callback) {
@@ -63,10 +63,10 @@ const fetchQuestions = function(category, amount, callback) {
 //     maxResults: 10, //replaced with userchoice,
 //     type: 'multiple',
     
-  };
-  $.getJSON(BASE_URL + TOKEN_USE, data, sessionToken);
+  // };
+//   $.getJSON(BASE_URL + TOKEN_USE, data, sessionToken);
 
-}
+// }
   
 
 // Helper functions
@@ -187,6 +187,16 @@ const handleStartQuiz = function() {
   render();
 };
 
+function handleQuizInput() {
+  $('.js-intro').on('click', 'js-start', event => {
+    console.log('handleQuizInput ran');
+    const category = $('.js-categories').val();
+    const amount = $('#qs').val();
+    console.log(category);
+    console.log(amount); 
+  });
+};
+
 const handleSubmitAnswer = function(e) {
   e.preventDefault();
   const question = getCurrentQuestion();
@@ -218,7 +228,8 @@ const handleNextQuestion = function() {
 // On DOM Ready, run render() and add event listeners
 $(() => {
   render();
-
+  fetchSessionToken();
+  handleQuizInput();
   $('.js-intro, .js-outro').on('click', '.js-start', handleStartQuiz);
   $('.js-question').on('submit', handleSubmitAnswer);
   $('.js-question-feedback').on('click', '.js-continue', handleNextQuestion);
