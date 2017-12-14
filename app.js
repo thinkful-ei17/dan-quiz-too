@@ -23,8 +23,8 @@ const getInitialStore = function() {
     page: 'intro',
     currentQuestionIndex: null,
     userAnswers: [],
-    feedback: null
-    sessionToken: false
+    feedback: null,
+    hasSessionToken: false
   };
 };
 
@@ -34,25 +34,37 @@ const BASE_URL = 'https://opentdb.com';
 const TOKEN_PATH = '/api_token.php';
 const TOKEN_USE = '/api.php';
 
+let sessionToken;
 const fetchSessionToken = function(callback) {
   $.getJSON(BASE_URL + TOKEN_PATH, {command: 'request'}, function(response) {
     if (response.response_code !== 0) {
       throw new Error('Something went wrong');
     } else {
+      console.log(response);
       sessionToken = response.token;
-      callback();
+      console.log(sessionToken);
     }
   });
 
 };
+fetchSessionToken();
+const fetchQuestions = function(category, amount, callback) {
+  const url = new URL(BASE_URL);
+  url.pathname = '/api.php';
+  url.searchParams.set('category');
+  url.searchParams.set('amount');
+  url.searchParams.set('token');
 
-function getDataFromApi(callback) {
-  const data = {
-    maxResults: 10, //replaced with userchoice,
-    type: 'multiple',
+  $.getJSON(url, callback)
+};
+
+// function getQuestions(callback) {
+//   const data = {
+//     maxResults: 10, //replaced with userchoice,
+//     type: 'multiple',
     
   };
-  $.getJSON(BASE_URL + TOKEN_USE, data, sessionToken)
+  $.getJSON(BASE_URL + TOKEN_USE, data, sessionToken);
 
 }
   
