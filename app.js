@@ -40,7 +40,7 @@ const fetchSessionToken = function(callback) {
     if (response.response_code !== 0) {
       throw new Error('Something went wrong');
     } else {
-      console.log(response);
+      // console.log(response);
       sessionToken = response.token;
       console.log(sessionToken);
     }
@@ -48,14 +48,17 @@ const fetchSessionToken = function(callback) {
 
 };
 
-const fetchQuestions = function(category, amount, callback) {
+const fetchQuestions = function(category, amount) {
   const url = new URL(BASE_URL);
   url.pathname = '/api.php';
-  url.searchParams.set('category');
-  url.searchParams.set('amount');
-  url.searchParams.set('token');
+  url.searchParams.set('category', category);
+  url.searchParams.set('amount', amount);
+  url.searchParams.set('token', sessionToken);
 
-  $.getJSON(url, callback);
+  $.getJSON(url, data =>{
+    console.log(data);
+  });
+ 
 };
 
 // function getQuestions(callback) {
@@ -188,14 +191,15 @@ const handleStartQuiz = function() {
 };
 
 function handleQuizInput() {
-  $('.js-intro').on('click', 'js-start', event => {
+  $('.js-intro').on('click', '.js-start', event => {
     console.log('handleQuizInput ran');
     const category = $('.js-categories').val();
     const amount = $('#qs').val();
+    fetchQuestions(category, amount);
     console.log(category);
     console.log(amount); 
   });
-};
+}
 
 const handleSubmitAnswer = function(e) {
   e.preventDefault();
@@ -234,3 +238,12 @@ $(() => {
   $('.js-question').on('submit', handleSubmitAnswer);
   $('.js-question-feedback').on('click', '.js-continue', handleNextQuestion);
 });
+
+class Store {}
+class Renderer{}
+
+const store = new Store();
+const renderer = new Renderer(store);
+
+
+Store.prototype.
